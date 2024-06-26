@@ -1,9 +1,10 @@
-console.log("Selecione uma das opções: ");
-console.log("opção (1): Adicionar uma nova consulta");
-console.log("opção (2): Listar todas as consultas");
-console.log("opção (3): Atualizar uma consulta existente");
-console.log("opção (4): Cancelar uma consulta");
-
+function mostrarMenu() {
+    console.log("\nSelecione uma das opções: ");
+    console.log("opção (1): Adicionar uma nova consulta");
+    console.log("opção (2): Listar todas as consultas");
+    console.log("opção (3): Cancelar uma consulta");
+    console.log("opção (4): Atualizar uma consulta existente");
+}
 let opcao
 let consultas = []
 let consulta = {
@@ -12,13 +13,8 @@ let consulta = {
     hora: "",
     data: ""
 }
-function mostrarMenu() {
-    console.log("\nSelecione uma das opções: ");
-    console.log("opção (1): Adicionar uma nova consulta");
-    console.log("opção (2): Listar todas as consultas");
-    console.log("opção (3): Atualizar uma consulta existente");
-    console.log("opção (4): Cancelar uma consulta");
-}
+mostrarMenu()
+
 process.stdin.on("data", function (data){
     let entrada = data.toString().trim()
 if(!opcao){
@@ -28,7 +24,8 @@ if(!opcao){
     console.log("Qual o nome do paciente?")
 
   } else if (opcao == "3"){
-        console.log("Qual o nome do paciente que deseja excuir? ")
+    console.log("Qual consulta você quer remover? (digite o índice)")
+    console.log(consultas)
     }
 
 } else if(opcao == "1"){
@@ -44,56 +41,38 @@ if(!opcao){
     } else if (!consulta.data){
         consulta.data = entrada
         consultas.push(consulta)
-        opcao = undefined; 
+        consulta = {}
+        opcao = undefined
         console.log("Consulta marcada com sucesso! ")
         console.log("Caso queira continuar com o processo escolha uma das opções abaixo, caso não, digite sair")
         mostrarMenu()
     } 
 } else if(opcao == "2"){
+    console.log("Consultas existentes: \n")
     console.log(consultas)
+    console.log("Caso queira continuar com o processo escolha uma das opções abaixo, caso não, digite sair")
+    mostrarMenu()
     opcao = undefined
-    console.log("Caso queira continuar com o processo escolha uma das opções já fornecidas anteriormente, caso não, digite sair")
+
 } else if(opcao == "3"){
-    let consulta_indice = -1;
-    for (let i = 0; i < consultas.length; i++) {
-      if (consultas[i].nome_paciente === entrada) {
-        consulta_indice = i;
-        break;
-      }
-    }
+   
+    console.log(consultas)
+    let indice_remocao = entrada
+    consultas[indice_remocao].removido = true
+    console.log("Remoção feita com sucesso!!")
+    mostrarMenu()
+    opcao = undefined
 
-    if (consulta_indice !== -1) {
-      let consultaEncontrada = consultas[consulta_indice];
-      console.log("Consulta encontrada. Informe os novos dados.");
-      console.log("Qual o novo nome do paciente?");
-      process.stdin.once("data", function (novoNome) {
-        consultaEncontrada.nome_paciente = novoNome.toString().trim();
-        console.log("Qual o novo médico?");
-        process.stdin.once("data", function (novoMedico) {
-          consultaEncontrada.medico = novoMedico.toString().trim();
-          console.log("Qual o novo horário?");
-          process.stdin.once("data", function (novoHorario) {
-            consultaEncontrada.hora = novoHorario.toString().trim();
-            console.log("Qual a nova data? (dia e mês apenas)");
-            process.stdin.once("data", function (novaData) {
-              consultaEncontrada.data = novaData.toString().trim();
-              consultas[consulta_indice] = consultaEncontrada;
-              console.log("Consulta atualizada com sucesso!");
-              opcao = undefined;
-              mostrarMenu();
-            });
-          });
-        });
-      });
-    } else {
-        console.log("Dado não encontrado")
-        opcao = undefined
-        mostrarMenu()
-    }
+
 } else if(opcao == "4"){
-    console.log("4")
+    consulta_indice = -1
+    for (let i = 0; i < consultas.length; i ++){
+        if (!(consultas[i].nome_paciente === entrada))
+            nome_paciente = entrada
+    }
 
-} else if(opcao == "sair"){
+
+} else if(opcao.toLowerCase == "sair"){
     console.log("Encerrando o processo..")
     process.exit()
 }else {
